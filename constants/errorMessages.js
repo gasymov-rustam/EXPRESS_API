@@ -9,6 +9,11 @@ const ErrorsMessages = Object.freeze({
   INVALID_LOGIN_OR_PASSWORD: 'Invalid login or password',
   INTERNAL_SERVER_ERROR: 'Internal server error',
   USER_NOT_FOUND: 'User not found',
+  UNAUTHORIZED: 'Unauthorized. Access denied. No token provided.',
+  FORBIDDEN: 'Forbidden',
+  INVALID_TOKEN: 'Invalid token',
+  ERROR_CREATING_POST: 'There was an error creating the post',
+  POST_NOT_FOUND: 'Post not found',
 });
 
 module.exports = { ErrorsMessages };

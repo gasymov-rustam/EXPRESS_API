@@ -66,7 +66,7 @@ const UserController = {
         return res.status(400).json({ error: ErrorsMessages.INVALID_LOGIN_OR_PASSWORD });
       }
 
-      const token = sign({ userId: user.id }, process.env.SECRET_KEY);
+      const token = sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1d' });
 
       res.json({ token });
     } catch (error) {
@@ -107,9 +107,72 @@ const UserController = {
     }
   },
 
-  updateUser: async () => {
+  updateUser: async (req, res) => {
+    const { id } = req.params;
+
+    if (id !== req.user.userId) {
+      return res.status(403).json({ error: ErrorsMessages.FORBIDDEN });
+    }
+
+    const { email, name, dateOfBirth, bio, location } = req.body;
+
+    let filePath;
+
+    if (req?.file?.path) {
+      filePath = req.file.path;
+    }
+
+    try {
+      const existingUser = await prisma.user.findFirst({ where: { email } });
+
+      if (existingUser && existingUser.id !== id) {
+        return res.status(400).json({ error: ErrorsMessages.USER_ALREADY_EXISTS });
+      }
+
+      const user = await prisma.user.update({
+        where: { id },
+        data: {
+          email,
+          name,
+          dateOfBirth,
+          bio,
+          location,
+          avatarUrl: filePath ? `/${filePath}` : undefined,
+        },
+      });
+
+      res.json(userDto(user));
+    } catch (error) {
+      res.status(500).json({ error: ErrorsMessages.INTERNAL_SERVER_ERROR });
+    }
   },
-  current: async () => {
+
+  current: async (req, res) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: req.user.userId },
+        include: {
+          followers: {
+            include: {
+              follower: true,
+            },
+          },
+          following: {
+            include: {
+              following: true,
+            },
+          },
+        },
+      });
+
+      if (!user) {
+        return res.status(400).json({ error: ErrorsMessages.USER_NOT_FOUND });
+      }
+
+      res.json(userDto(user));
+    } catch (error) {
+      res.status(500).json({ error: ErrorsMessages.INTERNAL_SERVER_ERROR });
+    }
   },
 };
 

@@ -4,6 +4,9 @@ const userDto = (user) => {
     email: user.email,
     name: user.name,
     avatarUrl: user.avatarUrl,
+    dateOfBirth: user.dateOfBirth,
+    bio: user.bio,
+    location: user.location,
   };
 };
 
