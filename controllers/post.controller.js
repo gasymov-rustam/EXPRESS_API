@@ -34,10 +34,13 @@ const PostController = {
           likes: true,
           author: true,
           comments: true,
+          _count: true,
         },
         orderBy: {
           createdAt: 'desc', // Sort by createdAt in descending order
         },
+        // take: 1, // Limit to 10 posts
+        // skip: req.query.skip ? parseInt(req.query.skip) : 1, // Skip posts if skip query param is provided
       });
 
       const postsWithLikeInfo = posts.map(post => ({

@@ -46,6 +46,7 @@ const UserController = {
       return res.status(500).json({ error: e.message });
     }
   },
+  
   login: async (req, res) => {
     const { email, password } = req.body;
 
