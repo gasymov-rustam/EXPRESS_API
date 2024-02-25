@@ -10,3 +10,7 @@ db:
     -npx prisma format
     -npx prisma db push
     -npx prisma studio
+    
+    
+docker:
+    -docker build -t express-server . (tag express-server for the image)
