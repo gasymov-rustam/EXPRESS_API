@@ -1,9 +1,12 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
 
-type THEME_VARIANT_TYPE = 'dark' | 'light';
+export enum THEME_VARIANT_TYPE {
+  DARK = 'dark',
+  LIGHT = 'light',
+}
 
 type ThemeContextType = {
-  theme: 'dark' | 'light';
+  theme: THEME_VARIANT_TYPE;
 };
 
 type ToggleThemeType = () => void;
@@ -11,7 +14,7 @@ type ToggleThemeType = () => void;
 let toggleTheme: ToggleThemeType | null = null;
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme: 'dark',
+  theme: THEME_VARIANT_TYPE.DARK,
 });
 
 export const useTheme = () => {
@@ -26,13 +29,13 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const storedTheme = localStorage.getItem('theme') as THEME_VARIANT_TYPE | null;
-  const currentTheme = storedTheme ? storedTheme : 'dark';
+  const currentTheme = storedTheme ? storedTheme : THEME_VARIANT_TYPE.DARK;
 
   const [theme, setTheme] = useState<THEME_VARIANT_TYPE>(currentTheme);
 
   toggleTheme = () => {
     setTheme((prevTheme) => {
-      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      const newTheme = prevTheme === THEME_VARIANT_TYPE.LIGHT ? THEME_VARIANT_TYPE.DARK : THEME_VARIANT_TYPE.LIGHT;
       localStorage.setItem('theme', newTheme);
 
       return newTheme;

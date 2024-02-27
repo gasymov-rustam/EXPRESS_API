@@ -1,1 +1,1 @@
-export { ThemeProvider, useTheme } from './ThemeContext';
+export { THEME_VARIANT_TYPE, ThemeProvider, useTheme } from './ThemeContext';
